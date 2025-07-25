@@ -12,6 +12,9 @@ on:
 
 jobs:
   deploy:
+    permissions:
+      id-token: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,10 +31,13 @@ jobs:
           role-to-assume: ${{ inputs.aws_role_arn }}
           aws-region: us-east-1
 
+      - name: Install uv
+        run: pip install uv
+
       - name: Install dependencies
         run: |
           cd ${{ inputs.project_directory }}
-          pip install -r requirements.txt
+          uv pip install -r requirements.txt
 
       - name: Deploy CDK
         run: |
