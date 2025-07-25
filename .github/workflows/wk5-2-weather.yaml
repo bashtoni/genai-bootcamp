@@ -1,0 +1,11 @@
+name: Deploy Weather
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/reusable-deploy-cdk.yaml
+    with:
+      project_directory: week5/2-weather
+      aws_role_arn: ${{ vars.AWS_ROLE_ARN }}

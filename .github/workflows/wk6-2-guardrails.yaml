@@ -1,0 +1,11 @@
+name: Deploy Guardrails
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/reusable-deploy-cdk.yaml
+    with:
+      project_directory: week6/2-guardrails
+      aws_role_arn: ${{ vars.AWS_ROLE_ARN }}

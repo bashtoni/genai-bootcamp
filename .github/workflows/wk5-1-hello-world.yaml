@@ -1,0 +1,11 @@
+name: Deploy Hello World
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/reusable-deploy-cdk.yaml
+    with:
+      project_path: week5/1-hello-world
+      aws_role_arn: ${{ vars.AWS_ROLE_ARN }}

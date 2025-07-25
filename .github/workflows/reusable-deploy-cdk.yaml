@@ -1,0 +1,39 @@
+name: Reusable Deploy CDK
+
+on:
+  workflow_call:
+    inputs:
+      aws_role_arn:
+        required: true
+        type: string
+      project_directory:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: us-east-1
+
+      - name: Install dependencies
+        run: |
+          cd ${{ inputs.project_directory }}
+          pip install -r requirements.txt
+
+      - name: Deploy CDK
+        run: |
+          cd ${{ inputs.project_directory }}
+          uv run cdk deploy

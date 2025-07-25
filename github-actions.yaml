@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Creates an IAM role for GitHub Actions with administrative privileges,
+  trusting the GitHub OIDC provider for the specified org/repo.
+
+Parameters:
+  GitHubOrg:
+    Type: String
+    Description: GitHub organization name (e.g. bashtoni)
+  GitHubRepo:
+    Type: String
+    Description: GitHub repository name (e.g. genai-bootcamp)
+
+Resources:
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - 6938fd4d98bab03faadb97b34396831e3780aea1
+
+  GitHubActionsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${GitHubOrg}-${GitHubRepo}-ActionsRole"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOIDCProvider
+            Action:
+              - sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubOrg}/${GitHubRepo}:*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+Outputs:
+  RoleArn:
+    Description: ARN of the GitHub Actions role
+    Value: !GetAtt GitHubActionsRole.Arn
