@@ -29,7 +29,7 @@ own fork to do so.
       --template-file github-actions.yaml \
       --stack-name github-actions-role \
       --parameter-overrides GitHubOrg=<your-org> GitHubRepo=<your-repo> \
-      --capabilities CAPABILITY_IAM
+      --capabilities CAPABILITY_NAMED_IAM
     ```
 
     After deployment, get the `RoleArn` output from the stack.
