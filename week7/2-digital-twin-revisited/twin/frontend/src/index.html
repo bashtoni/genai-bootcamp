@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,10 +173,14 @@
         }
 
         @keyframes typing {
-            0%, 60%, 100% {
+
+            0%,
+            60%,
+            100% {
                 transform: scale(0.8);
                 opacity: 0.5;
             }
+
             30% {
                 transform: scale(1);
                 opacity: 1;
@@ -193,6 +198,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="chat-container">
         <div class="chat-header">
@@ -217,8 +223,8 @@
 
     <script>
         // CONFIGURATION - Edit this name to customize for different jobseekers
-        const JOBSEEKER_NAME = "No Juan";
-        
+        const JOBSEEKER_NAME = "Andrew Koch";
+
         // Update page title with jobseeker name
         document.getElementById('chat-title').textContent = `Chat with ${JOBSEEKER_NAME}'s Digital Twin`;
         document.title = `Chat with ${JOBSEEKER_NAME}`;
@@ -249,14 +255,14 @@
             try {
                 const response = await fetch('/api/chat');
                 if (!response.ok) throw new Error('Failed to load messages');
-                
+
                 const data = await response.json();
                 messagesContainer.innerHTML = '';
-                
+
                 data.messages.forEach(message => {
                     displayMessage(message.role, message.content[0].text, false);
                 });
-                
+
                 scrollToBottom();
             } catch (error) {
                 console.error('Error loading messages:', error);
@@ -271,11 +277,11 @@
             // Disable input while sending
             messageInput.disabled = true;
             sendButton.disabled = true;
-            
+
             // Display user message
             displayMessage('user', message, true);
             messageInput.value = '';
-            
+
             // Show typing indicator
             showTypingIndicator();
 
@@ -309,17 +315,17 @@
                         if (line.startsWith('data: ')) {
                             const data = line.slice(6).trim();
                             if (data === '[DONE]' || data === '') continue;
-                            
+
                             try {
                                 // Parse the JSON-encoded string to get the actual text
                                 const textChunk = JSON.parse(data);
                                 assistantMessage += textChunk;
-                                
+
                                 if (!messageElement) {
                                     messageElement = createMessageElement('assistant', '');
                                     messagesContainer.appendChild(messageElement);
                                 }
-                                
+
                                 const bubble = messageElement.querySelector('.message-bubble');
                                 bubble.textContent = assistantMessage;
                                 scrollToBottom();
@@ -327,12 +333,12 @@
                                 // If JSON parsing fails, treat as plain text (fallback)
                                 console.warn('Failed to parse JSON chunk:', data);
                                 assistantMessage += data;
-                                
+
                                 if (!messageElement) {
                                     messageElement = createMessageElement('assistant', '');
                                     messagesContainer.appendChild(messageElement);
                                 }
-                                
+
                                 const bubble = messageElement.querySelector('.message-bubble');
                                 bubble.textContent = assistantMessage;
                                 scrollToBottom();
@@ -355,7 +361,7 @@
         function displayMessage(role, content, animate = true) {
             const messageElement = createMessageElement(role, content);
             messagesContainer.appendChild(messageElement);
-            
+
             if (animate) {
                 messageElement.style.opacity = '0';
                 messageElement.style.transform = 'translateY(20px)';
@@ -365,18 +371,18 @@
                     messageElement.style.transform = 'translateY(0)';
                 }, 10);
             }
-            
+
             scrollToBottom();
         }
 
         function createMessageElement(role, content) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}`;
-            
+
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'message-bubble';
             bubbleDiv.textContent = content;
-            
+
             messageDiv.appendChild(bubbleDiv);
             return messageDiv;
         }
@@ -396,7 +402,7 @@
             errorDiv.textContent = message;
             messagesContainer.appendChild(errorDiv);
             scrollToBottom();
-            
+
             setTimeout(() => {
                 errorDiv.remove();
             }, 5000);
@@ -407,4 +413,5 @@
         }
     </script>
 </body>
+
 </html>
